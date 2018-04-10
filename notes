@@ -1,0 +1,46 @@
+Socket Types
+- Stream Sockets: SOCK_STREAM "TCP Reliable two-way connected communication"
+- Datagram Sockets: SOCK_DGRAM "UDP Unreliable connectionless communication"
+- Raw Sockets
+
+struct addrinfo {
+    int              ai_flags;     // AI_PASSIVE, AI_CANONNAME, etc.
+    int              ai_family;    // AF_INET, AF_INET6, AF_UNSPEC
+    int              ai_socktype;  // SOCK_STREAM, SOCK_DGRAM
+    int              ai_protocol;  // use 0 for "any"
+    size_t           ai_addrlen;   // size of ai_addr in bytes
+    struct sockaddr *ai_addr;      // struct sockaddr_in or _in6
+    char            *ai_canonname; // full canonical hostname
+
+    struct addrinfo *ai_next;      // linked list, next node
+};
+
+int getaddrinfo(const char *node,     // e.g. "www.example.com" or IP
+                const char *service,  // e.g. "http" or port number
+                const struct addrinfo *hints,
+                struct addrinfo **res);
+
+int socket(int domain, int type, int protocol);
+int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
+int connect(int sockfd, struct sockaddr *serv_addr, int addrlen);
+int listen(int sockfd, int backlog);
+int accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen);
+
+int send(int sockfd, const void *msg, int len, int flags);
+int recv(int sockfd, void *buf, int len, int flags);
+
+int sendto(int sockfd, const void *msg, int len, unsigned int flags,
+           const struct sockaddr *to, socklen_t tolen);
+int recvfrom(int sockfd, void *buf, int len, unsigned int flags,
+             struct sockaddr *from, int *fromlen);
+
+close(sockfd);
+int shutdown(int sockfd, int how);
+how:
+	0	Further receives are disallowed
+	1	Further sends are disallowed
+	2	Further sends and receives are disallowed (like close())
+
+
+int getpeername(int sockfd, struct sockaddr *addr, int *addrlen); 
+int gethostname(char *hostname, size_t size); 
